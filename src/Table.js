@@ -33,8 +33,13 @@ export default class Table extends Components {
 
   renderRow() {
     return this.props.data.map((student) => {
+      const background =
+        student.name === this.props.activeName ? "gray" : "white";
       return (
-        <Row key={student.name} style={{ marginTop: "10px" }}>
+        <Row
+          key={student.name}
+          style={{ marginTop: "10px", backgroundColor: background }}
+        >
           <Col xs={3}>{student.name}</Col>
           <Col xs={3}>{student.height}</Col>
           <Col xs={3}>{student.age}</Col>

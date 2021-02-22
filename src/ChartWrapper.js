@@ -7,7 +7,7 @@ const ChartWrapper = (props) => {
 
   useEffect(() => {
     if (!chart) {
-      setChart(new D3Chart(chartArea.current, props.data));
+      setChart(new D3Chart(chartArea.current, props.data, props.updateName));
     } else {
       chart.update(props.data);
     }
