@@ -65,7 +65,7 @@ class D3Chart {
     vis.yAxisGroup.transition(1000).call(yAxisCall);
 
     // 1-DATA JOIN connect data to circles
-    const circles = d3.selectAll("circle").data(vis.data, (d) => d.name);
+    const circles = vis.g.selectAll("circle").data(vis.data, (d) => d.name);
 
     // 3-EXIT remove old element from the screen
     circles.exit().transition(1000).attr("cy", vis.y(0)).remove();

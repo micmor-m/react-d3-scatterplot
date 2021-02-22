@@ -11,7 +11,7 @@ const ChartWrapper = (props) => {
     } else {
       chart.update(props.data);
     }
-  }, [chart, props.data]);
+  }, [chart, props.data, props.updateName]);
 
   return <div className="chart-area" ref={chartArea}></div>;
 };

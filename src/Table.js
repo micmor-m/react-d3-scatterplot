@@ -4,7 +4,7 @@ import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
-export default class Table extends Components {
+export default class Table extends Component {
   state = {
     name: "",
     height: "",
@@ -12,7 +12,7 @@ export default class Table extends Components {
   };
 
   handleSubmit = () => {
-    this.props.updateData([...this.props, data, this.state]);
+    this.props.updateData([...this.props.data, this.state]);
     this.setState({
       name: "",
       height: "",
@@ -26,7 +26,7 @@ export default class Table extends Components {
 
   handleRemove = (event) => {
     const newData = this.props.data.filter((d) => {
-      return d.name != event.target.name;
+      return d.name !== event.target.name;
     });
     this.props.updateData(newData);
   };
@@ -49,6 +49,7 @@ export default class Table extends Components {
               type={"button"}
               style={{ width: "100%" }}
               name={student.name}
+              onClick={this.handleRemove}
             >
               Remove
             </Button>
