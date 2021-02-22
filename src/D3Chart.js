@@ -10,7 +10,7 @@ class D3Chart {
 
     //save data
     vis.data = data;
-
+    //console.log(data);
     vis.g = d3
       .select(element)
       .append("svg")
@@ -30,8 +30,27 @@ class D3Chart {
 
   update() {
     let vis = this;
+
     vis.x.domain([0, d3.max(vis.data, (d) => Number(d.age))]);
     vis.y.domain([0, d3.max(vis.data, (d) => Number(d.heigth))]);
+
+    // 1-DATA JOIN connect data to circles
+    const circles = d3.selectAll("circle").data(vis.data, (d) => d.name);
+
+    // 3-EXIT remove old element from the screen
+    circles.exit().remove();
+
+    // 4-UPDATE arrange remaining circles
+    circles.attr("cx", (d) => vis.x(d.age)).attr("cy", (d) => vis.y(d.heigth));
+
+    // 2-ENTER ad new circles for our data
+    circles
+      .enter()
+      .append("circle")
+      .attr("cx", (d) => vis.x(d.age))
+      .attr("cy", (d) => vis.y(d.heigth))
+      .attr("r", 5)
+      .attr("fill", "grey");
   }
 }
 
