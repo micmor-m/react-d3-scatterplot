@@ -3,7 +3,6 @@ import D3Chart from "./D3Chart";
 
 const ChartWrapper = (props) => {
   const chartArea = useRef(null);
-  //const [chart, setChart] = useState(null); original line
   const [chart, setChart] = useState(null);
 
   useEffect(() => {

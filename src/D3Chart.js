@@ -9,7 +9,7 @@ class D3Chart {
     let vis = this;
 
     //save data
-    vis.data = data;
+    //vis.data = data;
     //console.log(data);
     vis.g = d3
       .select(element)
@@ -48,11 +48,12 @@ class D3Chart {
       .attr("text-anchor", "middle")
       .text("Height in cm");
 
-    vis.update();
+    vis.update(data);
   }
 
-  update() {
+  update(data) {
     let vis = this;
+    vis.data = data;
 
     vis.x.domain([0, d3.max(vis.data, (d) => Number(d.age))]);
     vis.y.domain([0, d3.max(vis.data, (d) => Number(d.height))]);
@@ -60,26 +61,31 @@ class D3Chart {
     const xAxisCall = d3.axisBottom(vis.x);
     const yAxisCall = d3.axisLeft(vis.y);
 
-    vis.xAxisGroup.call(xAxisCall);
-    vis.yAxisGroup.call(yAxisCall);
+    vis.xAxisGroup.transition(1000).call(xAxisCall);
+    vis.yAxisGroup.transition(1000).call(yAxisCall);
 
     // 1-DATA JOIN connect data to circles
     const circles = d3.selectAll("circle").data(vis.data, (d) => d.name);
 
     // 3-EXIT remove old element from the screen
-    circles.exit().remove();
+    circles.exit().transition(1000).attr("cy", vis.y(0)).remove();
 
     // 4-UPDATE arrange remaining circles
-    circles.attr("cx", (d) => vis.x(d.age)).attr("cy", (d) => vis.y(d.height));
+    circles
+      .transition(1000)
+      .attr("cx", (d) => vis.x(d.age))
+      .attr("cy", (d) => vis.y(d.height));
 
     // 2-ENTER ad new circles for our data
     circles
       .enter()
       .append("circle")
+      .attr("cy", vis.y(0))
       .attr("cx", (d) => vis.x(d.age))
-      .attr("cy", (d) => vis.y(d.height))
       .attr("r", 5)
-      .attr("fill", "grey");
+      .attr("fill", "grey")
+      .transition(1000)
+      .attr("cy", (d) => vis.y(d.height));
   }
 }
 
