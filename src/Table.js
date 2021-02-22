@@ -5,6 +5,32 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
 export default class Table extends Components {
+  state = {
+    name: "",
+    height: "",
+    age: "",
+  };
+
+  handleSubmit = () => {
+    this.props.updateData([...this.props, data, this.state]);
+    this.setState({
+      name: "",
+      height: "",
+      age: "",
+    });
+  };
+
+  handleChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
+  handleRemove = (event) => {
+    const newData = this.props.data.filter((d) => {
+      return d.name != event.target.name;
+    });
+    this.props.updateData(newData);
+  };
+
   renderRow() {
     return this.props.data.map((student) => {
       return (
@@ -31,19 +57,35 @@ export default class Table extends Components {
       <div>
         <Row>
           <Col xs={3}>
-            <Form.Control placeholder={"Name"} name={"name"} />
+            <Form.Control
+              placeholder={"Name"}
+              name={"name"}
+              value={this.state.name}
+              onChange={this.handleChange}
+            />
           </Col>
           <Col xs={3}>
-            <Form.Control placeholder={"Height"} name={"height"} />
+            <Form.Control
+              placeholder={"Height"}
+              name={"height"}
+              value={this.state.height}
+              onChange={this.handleChange}
+            />
           </Col>
           <Col xs={3}>
-            <Form.Control placeholder={"Age"} name={"age"} />
+            <Form.Control
+              placeholder={"Age"}
+              name={"age"}
+              value={this.state.age}
+              onChange={this.handleChange}
+            />
           </Col>
           <Col>
             <Button
               variant={"primary"}
               type={"button"}
               style={{ width: "100%" }}
+              onClick={this.handleSubmit}
             >
               Add
             </Button>
