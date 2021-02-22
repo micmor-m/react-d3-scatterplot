@@ -8,10 +8,10 @@ class D3Chart {
   constructor(element, data, updateName) {
     let vis = this;
     vis.updateName = updateName;
-    //vis.type = type;
+
     //save data
     vis.data = data;
-    console.log(data[0].areaData);
+    //console.log(data[0].areaData);
     vis.g = d3
       .select(element)
       .append("svg")
@@ -20,8 +20,28 @@ class D3Chart {
       .append("g")
       .attr("transform", `translate(${MARGIN.LEFT}, ${MARGIN.TOP})`);
 
+    // labels
+    // vis.g
+    //   .append("text")
+    //   .attr("x", WIDTH / 2)
+    //   .attr("y", HEIGHT + 40)
+    //   .attr("font-size", 20)
+    //   .attr("text-anchor", "middle")
+    //   .text("Age"); //+++++++++++++++to be dhynamic
+
+    // vis.g
+    //   .append("text")
+    //   .attr("x", -HEIGHT / 2)
+    //   .attr("y", -50)
+    //   .attr("transform", "rotate(-90)")
+    //   .attr("font-size", 20)
+    //   .attr("text-anchor", "middle")
+    //   .text("Height in cm"); //+++++++to be dhynamic
+
     //x scale
-    vis.x = d3.scaleLinear().range([0, WIDTH]);
+    //vis.x = d3.scaleLinear().range([0, WIDTH]); // original
+    //vis.x = d3.scaleTime().range([0, WIDTH]);
+    vis.x = d3.scalePoint().range([0, WIDTH]);
 
     //y scale
     vis.y = d3.scaleLinear().range([HEIGHT, 0]);
@@ -38,24 +58,6 @@ class D3Chart {
     vis.process = data[0].areaData["Process"];
     vis.knowledge = data[0].areaData["Knowledge"];
     vis.update("qualityScore");
-
-    // labels
-    vis.g
-      .append("text")
-      .attr("x", WIDTH / 2)
-      .attr("y", HEIGHT + 40)
-      .attr("font-size", 20)
-      .attr("text-anchor", "middle")
-      .text("Age");
-
-    vis.g
-      .append("text")
-      .attr("x", -HEIGHT / 2)
-      .attr("y", -50)
-      .attr("transform", "rotate(-90)")
-      .attr("font-size", 20)
-      .attr("text-anchor", "middle")
-      .text("Height in cm");
 
     //vis.update(data);
   }
@@ -78,8 +80,18 @@ class D3Chart {
     }
     console.log("VIS DATA", vis.data);
 
-    vis.x.domain([0, d3.max(vis.data, (d) => Number(d.age))]);
-    vis.y.domain([0, d3.max(vis.data, (d) => Number(d.height))]);
+    //const xLabel = ["Apr", "May", "Jun", "Jul"];
+
+    vis.x.domain(["Apr", "May", "Jun", "Jul"]);
+    //vis.x.domain(vis.data.map((d) => d.date));
+    // vis.x.domain(
+    //   d3.extent(vis.data, (d) => {
+    //     d3.timeParse("%m")(d.date);
+    //   })
+    // );
+    //vis.x.domain([0, d3.max(vis.data, (d) => d.date)]); //original
+
+    vis.y.domain([0, d3.max(vis.data, (d) => Number(d.score))]);
 
     const xAxisCall = d3.axisBottom(vis.x);
     const yAxisCall = d3.axisLeft(vis.y);
@@ -87,8 +99,66 @@ class D3Chart {
     vis.xAxisGroup.transition(1000).call(xAxisCall);
     vis.yAxisGroup.transition(1000).call(yAxisCall);
 
+    // Add the area
+    //svg
+    vis.g
+      .append("path")
+      .datum(vis.data)
+      .attr("fill", "#69b3a2")
+      .attr("fill-opacity", 0.3)
+      .attr("stroke", "none")
+      .attr(
+        "d",
+        d3
+          .area()
+          // .x((d) => {
+          //   if (d.date === "Apr") {
+          //     return 0;
+          //   } else if (d.date === "May") {
+          //     return 1;
+          //   } else if (d.date === "Jun") {
+          //     return 2;
+          //   } else if (d.date === "Jul") {
+          //     return 3;
+          //   }
+          // })
+          .x((d) => vis.x(d.date))
+          .y0(HEIGHT)
+          //.y1((d) => Number(d.score))
+          .y1((d) => vis.y(d.score))
+      );
+
+    // Add the line
+    //svg
+    vis.g
+      .append("path")
+      .datum(vis.data)
+      .attr("fill", "none")
+      .attr("stroke", "#69b3a2")
+      .attr("stroke-width", 4)
+      .attr(
+        "d",
+        d3
+          .line()
+          // .x((d) => {
+          //   if (d.date === "Apr") {
+          //     return 0;
+          //   } else if (d.date === "May") {
+          //     return 1;
+          //   } else if (d.date === "Jun") {
+          //     return 2;
+          //   } else if (d.date === "Jul") {
+          //     return 3;
+          //   }
+          // })
+          .x((d) => vis.x(d.date))
+          .y((d) => vis.y(d.score))
+        //.y((d) => Number(d.score))
+      );
+
     // 1-DATA JOIN connect data to circles
-    const circles = vis.g.selectAll("circle").data(vis.data, (d) => d.name);
+    const circles = vis.g.selectAll("circle").data(vis.data, (d) => d.date); //original
+    //const circles = vis.g.selectAll("circle").data(myData);
 
     // 3-EXIT remove old element from the screen
     circles.exit().transition(1000).attr("cy", vis.y(0)).remove();
@@ -96,20 +166,22 @@ class D3Chart {
     // 4-UPDATE arrange remaining circles
     circles
       .transition(1000)
-      .attr("cx", (d) => vis.x(d.age))
-      .attr("cy", (d) => vis.y(d.height));
+      // .attr("cx", (d) => vis.x(d.date)) //original
+      .attr("cx", (d) => vis.x(d.date))
+      .attr("cy", (d) => vis.y(d.score));
 
     // 2-ENTER ad new circles for our data
     circles
       .enter()
       .append("circle")
       .attr("cy", vis.y(0))
-      .attr("cx", (d) => vis.x(d.age))
+      // .attr("cx", (d) => vis.x(d.date)) //original
+      .attr("cx", (d) => vis.x(d.date))
       .attr("r", 5)
       .attr("fill", "grey")
-      .on("click", (d) => vis.updateName(d.name))
+      // .on("click", (d) => vis.updateName(d.date))
       .transition(1000)
-      .attr("cy", (d) => vis.y(d.height));
+      .attr("cy", (d) => vis.y(d.score));
   }
 }
 
