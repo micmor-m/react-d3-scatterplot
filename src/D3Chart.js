@@ -8,9 +8,10 @@ class D3Chart {
   constructor(element, data, updateName) {
     let vis = this;
     vis.updateName = updateName;
+    //vis.type = type;
     //save data
-    //vis.data = data;
-    //console.log(data);
+    vis.data = data;
+    console.log(data[0].areaData);
     vis.g = d3
       .select(element)
       .append("svg")
@@ -30,6 +31,14 @@ class D3Chart {
       .attr("transform", `translate(0, ${HEIGHT})`);
     vis.yAxisGroup = vis.g.append("g");
 
+    vis.qualityScore = data[0].areaData["Quality Score"];
+    vis.basic = data[0].areaData["Basics"];
+    vis.interaction = data[0].areaData["Interaction"];
+    vis.expertise = data[0].areaData["Expertise"];
+    vis.process = data[0].areaData["Process"];
+    vis.knowledge = data[0].areaData["Knowledge"];
+    vis.update("qualityScore");
+
     // labels
     vis.g
       .append("text")
@@ -48,12 +57,26 @@ class D3Chart {
       .attr("text-anchor", "middle")
       .text("Height in cm");
 
-    vis.update(data);
+    //vis.update(data);
   }
 
-  update(data) {
+  update(data, type) {
     let vis = this;
-    vis.data = data;
+    //vis.data = data;
+    if (type === "qualityScore") {
+      vis.data = vis.qualityScore;
+    } else if (type === "basic") {
+      vis.data = vis.basic;
+    } else if (type === "interaction") {
+      vis.data = vis.interaction;
+    } else if (type === "expertise") {
+      vis.data = vis.expertise;
+    } else if (type === "process") {
+      vis.data = vis.process;
+    } else if (type === "knowledge") {
+      vis.data = vis.knowledge;
+    }
+    console.log("VIS DATA", vis.data);
 
     vis.x.domain([0, d3.max(vis.data, (d) => Number(d.age))]);
     vis.y.domain([0, d3.max(vis.data, (d) => Number(d.height))]);

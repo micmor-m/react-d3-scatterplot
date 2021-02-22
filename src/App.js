@@ -7,18 +7,23 @@ import { json } from "d3";
 
 import ChartWrapper from "./ChartWrapper";
 import Table from "./Table";
+import dataJson from "./data.json";
+import TypeDropdown from "./TypeDropdown";
 
 class App extends Component {
   state = {
-    data: [],
+    data: [dataJson],
     activeName: null,
+    typeData: "qualityScore",
   };
 
-  componentWillMount() {
-    json("https://udemy-react-d3.firebaseio.com/children.json")
-      .then((data) => this.setState({ data }))
-      .catch((error) => console.log(error));
-  }
+  typeSelected = (typeData) => this.setState({ typeData });
+
+  // componentWillMount() {
+  //   json("https://udemy-react-d3.firebaseio.com/children.json")
+  //     .then((data) => this.setState({ data }))
+  //     .catch((error) => console.log(error));
+  // }
 
   updateName = (activeName) => this.setState({ activeName });
 
@@ -28,7 +33,13 @@ class App extends Component {
     if (this.state.data.length === 0) {
       return "No data yet";
     }
-    return <ChartWrapper data={this.state.data} updateName={this.updateName} />;
+    return (
+      <ChartWrapper
+        data={this.state.data}
+        updateName={this.updateName}
+        type={this.state.typeData}
+      />
+    );
   }
 
   render() {
@@ -38,6 +49,11 @@ class App extends Component {
           <Navbar.Brand>ScatterPlot</Navbar.Brand>
         </Navbar>
         <Container>
+          <Row>
+            <Col xs={12}>
+              <TypeDropdown typeSelected={this.typeSelected} />
+            </Col>
+          </Row>
           <Row>
             <Col md={6} xs={12}>
               {this.renderChart()}

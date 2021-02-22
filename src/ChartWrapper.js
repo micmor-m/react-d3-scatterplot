@@ -7,11 +7,13 @@ const ChartWrapper = (props) => {
 
   useEffect(() => {
     if (!chart) {
-      setChart(new D3Chart(chartArea.current, props.data, props.updateName));
+      setChart(
+        new D3Chart(chartArea.current, props.data, props.updateName, props.type)
+      );
     } else {
-      chart.update(props.data);
+      chart.update(props.data, props.type);
     }
-  }, [chart, props.data, props.updateName]);
+  }, [chart, props.data, props.updateName, props.type]);
 
   return <div className="chart-area" ref={chartArea}></div>;
 };
