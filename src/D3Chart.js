@@ -11,7 +11,6 @@ class D3Chart {
 
     //save data
     vis.data = data;
-    //console.log(data[0].areaData);
     vis.g = d3
       .select(element)
       .append("svg")
@@ -20,27 +19,6 @@ class D3Chart {
       .append("g")
       .attr("transform", `translate(${MARGIN.LEFT}, ${MARGIN.TOP})`);
 
-    // labels
-    // vis.g
-    // .append("text")
-    // .attr("x", WIDTH / 2)
-    // .attr("y", HEIGHT + 40)
-    // .attr("font-size", 20)
-    // .attr("text-anchor", "middle")
-    // .text("Age"); //+++++++++++++++to be dhynamic
-
-    // vis.g
-    // .append("text")
-    // .attr("x", -HEIGHT / 2)
-    // .attr("y", -50)
-    // .attr("transform", "rotate(-90)")
-    // .attr("font-size", 20)
-    // .attr("text-anchor", "middle")
-    // .text("Height in cm"); //+++++++to be dhynamic
-
-    //x scale
-    //vis.x = d3.scaleLinear().range([0, WIDTH]); // original
-    //vis.x = d3.scaleTime().range([0, WIDTH]);
     vis.x = d3.scalePoint().range([0, WIDTH]);
 
     //y scale
@@ -58,13 +36,10 @@ class D3Chart {
     vis.process = data[0].areaData["Process"];
     vis.knowledge = data[0].areaData["Knowledge"];
     vis.update("qualityScore");
-
-    //vis.update(data);
   }
 
   update(data, type) {
     let vis = this;
-    //vis.data = data;
     if (type === "Quality Score") {
       vis.data = vis.qualityScore;
     } else if (type === "Basics") {
@@ -78,18 +53,8 @@ class D3Chart {
     } else if (type === "Knowledge") {
       vis.data = vis.knowledge;
     }
-    console.log("VIS DATA", vis.data);
-
-    //const xLabel = ["Apr", "May", "Jun", "Jul"];
 
     vis.x.domain(["Apr", "May", "Jun", "Jul"]);
-    //vis.x.domain(vis.data.map((d) => d.date));
-    // vis.x.domain(
-    // d3.extent(vis.data, (d) => {
-    // d3.timeParse("%m")(d.date);
-    // })
-    // );
-    //vis.x.domain([0, d3.max(vis.data, (d) => d.date)]); //original
 
     vis.y.domain([0, d3.max(vis.data, (d) => Number(d.score))]);
 
@@ -99,71 +64,29 @@ class D3Chart {
     vis.xAxisGroup.transition(1000).call(xAxisCall);
     vis.yAxisGroup.transition(1000).call(yAxisCall);
 
-    // Add the area
-    //const areas = vis.g.selectAll("area").data(vis.data, (d) => d.date);
-    //svg
-    // vis.g
-    //   .append("path")
-    //   .datum(vis.data)
-    //   .attr("fill", "#69b3a2")
-    //   .attr("fill-opacity", 0.3)
-    //   .attr("stroke", "none")
-    //   .attr(
-    //     "d",
-    //     d3
-    //       .area()
-    //       .x((d) => vis.x(d.date))
-    //       .y0(HEIGHT)
-    //       .y1((d) => vis.y(d.score))
-    //   );
-
-    // Add the line
-    //svg
-    // vis.g
-    //   .append("path")
-    //   .datum(vis.data)
-    //   .attr("fill", "none")
-    //   .attr("stroke", "#69b3a2")
-    //   .attr("stroke-width", 4)
-    //   .attr(
-    //     "d",
-    //     d3
-    //       .line()
-    //       .x((d) => vis.x(d.date))
-    //       .y((d) => vis.y(d.score))
-    //   );
-
     // 1-DATA JOIN connect data to circles
     const circles = vis.g.selectAll("circle").data(vis.data, (d) => d.date); //original
     const lines = vis.g.selectAll("path").data(vis.data, (d) => d);
-    const areas = vis.g.selectAll("path").data(vis.data, (d) => d);
-    //const circles = vis.g.selectAll("circle").data(myData);
 
     // 3-EXIT remove old element from the screen
     circles.exit().transition(1000).attr("cy", vis.y(0)).remove();
-    //vis.g.select("path").remove(lines);
-    //vis.g.selectAll("path").remove(); this works but delete axis
     vis.g.selectAll("#lines").remove();
     vis.g.selectAll("#areas").remove();
 
     // 4-UPDATE arrange remaining circles
     circles
       .transition(1000)
-      // .attr("cx", (d) => vis.x(d.date)) //original
       .attr("cx", (d) => vis.x(d.date))
       .attr("cy", (d) => vis.y(d.score));
 
-    //lines.transition(1000).attr("d", d3.line());
-
     // 2-ENTER ad new circles for our data
-
     lines
       .enter()
       .append("path")
       .attr("id", "lines")
       .datum(vis.data)
       .attr("fill", "none")
-      .attr("stroke", "#69b3a2")
+      .attr("stroke", "#007bff")
       .attr("stroke-width", 4)
       .attr(
         "d",
@@ -174,11 +97,10 @@ class D3Chart {
       );
 
     vis.g
-      //areas
       .append("path")
       .attr("id", "areas")
       .datum(vis.data)
-      .attr("fill", "#69b3a2")
+      .attr("fill", "#007bff")
       .attr("fill-opacity", 0.3)
       .attr("stroke", "none")
       .attr(
@@ -195,11 +117,9 @@ class D3Chart {
       .append("circle")
       .attr("id", "circles")
       .attr("cy", vis.y(0))
-      // .attr("cx", (d) => vis.x(d.date)) //original
       .attr("cx", (d) => vis.x(d.date))
       .attr("r", 5)
-      .attr("fill", "#69b3a2")
-      // .on("click", (d) => vis.updateName(d.date))
+      .attr("fill", "#007bff")
       .transition(1000)
       .attr("cy", (d) => vis.y(d.score));
   }

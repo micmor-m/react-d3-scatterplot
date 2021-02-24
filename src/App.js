@@ -3,14 +3,10 @@ import Navbar from "react-bootstrap/Navbar";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { json } from "d3";
 
 import ChartWrapper from "./ChartWrapper";
 import PieWrapper from "./PieWrapper";
-import Table from "./Table";
 import dataJson from "./data.json";
-import TypeDropdown from "./TypeDropdown";
-import D3Pie from "./D3Pie";
 
 class App extends Component {
   state = {
@@ -20,15 +16,8 @@ class App extends Component {
   };
 
   typeSelected = (typeData) => {
-    console.log("typeData", typeData);
     return this.setState({ typeData });
   };
-
-  // componentWillMount() {
-  //   json("https://udemy-react-d3.firebaseio.com/children.json")
-  //     .then((data) => this.setState({ data }))
-  //     .catch((error) => console.log(error));
-  // }
 
   updateName = (activeName) => this.setState({ activeName });
 
@@ -47,19 +36,6 @@ class App extends Component {
     );
   }
 
-  // renderPie() {
-  //   if (this.state.data.length === 0) {
-  //     return "No data yet";
-  //   }
-  //   return (
-  //     <PieWrapper
-  //       data={this.state.data}
-  //       updateName={this.updateName}
-  //       type={this.state.typeData}
-  //     />
-  //   );
-  // }
-
   render() {
     return (
       <div>
@@ -67,34 +43,24 @@ class App extends Component {
           <Navbar.Brand>Diagnostic Tool</Navbar.Brand>
         </Navbar>
         <Container>
-          <Row>
-            <Col xs={12}>
-              {/* <TypeDropdown typeSelected={this.typeSelected} /> */}
-            </Col>
-          </Row>
+          <Row></Row>
           <Row
             style={{
               marginTop: "2rem",
             }}
           >
             <Col md={6} xs={12}>
-              {
-                this.state.data[0]["gaugeData"].map((el) => {
-                  return (
-                    <PieWrapper
-                      data={el}
-                      updateName={this.updateName}
-                      type={this.state.typeData}
-                      switchSetHandler={this.typeSelected}
-                    />
-                  );
-                })
-                //   <PieWrapper
-                //   data={this.state.data[0]["gaugeData"][0]}
-                //   updateName={this.updateName}
-                //   type={this.state.typeData}
-                // />
-              }
+              {this.state.data[0]["gaugeData"].map((el, index) => {
+                return (
+                  <PieWrapper
+                    key={index}
+                    data={el}
+                    updateName={this.updateName}
+                    type={this.state.typeData}
+                    switchSetHandler={this.typeSelected}
+                  />
+                );
+              })}
             </Col>
             <Col
               md={6}
