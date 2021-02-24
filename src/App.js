@@ -64,7 +64,7 @@ class App extends Component {
     return (
       <div>
         <Navbar bg="light">
-          <Navbar.Brand>ScatterPlot</Navbar.Brand>
+          <Navbar.Brand>Diagnostic Tool</Navbar.Brand>
         </Navbar>
         <Container>
           <Row>
