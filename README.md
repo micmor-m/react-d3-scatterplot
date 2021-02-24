@@ -5,7 +5,7 @@ On the side, a dynamic area chart will show a detailed dataset according to the 
 
 ## Final Product
 
-!["Screenshot overview"]()
+!["Screenshot overview"](https://github.com/micmor-m/react-d3-scatterplot/blob/master/docs/DiagnosticTool_overview.png)
 
 ## Dependencies
 
