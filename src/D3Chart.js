@@ -65,17 +65,17 @@ class D3Chart {
   update(data, type) {
     let vis = this;
     //vis.data = data;
-    if (type === "qualityScore") {
+    if (type === "Quality Score") {
       vis.data = vis.qualityScore;
-    } else if (type === "basic") {
+    } else if (type === "Basics") {
       vis.data = vis.basic;
-    } else if (type === "interaction") {
+    } else if (type === "Interaction") {
       vis.data = vis.interaction;
-    } else if (type === "expertise") {
+    } else if (type === "Expertise") {
       vis.data = vis.expertise;
-    } else if (type === "process") {
+    } else if (type === "Process") {
       vis.data = vis.process;
-    } else if (type === "knowledge") {
+    } else if (type === "Knowledge") {
       vis.data = vis.knowledge;
     }
     console.log("VIS DATA", vis.data);

@@ -1,5 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import D3Pie from "./D3Pie";
+import "./Button.css";
+//const classNames = require("classNames");
 
 const PieWrapper = (props) => {
   const chartArea = useRef(null);
@@ -17,6 +19,7 @@ const PieWrapper = (props) => {
 
   return (
     <div
+      // className={buttonClass}
       style={{
         // border: "1px solid blue",
         display: "inline",
@@ -24,8 +27,9 @@ const PieWrapper = (props) => {
         height: "auto",
         marginTop: "2rem",
       }}
-      className="chart-area"
+      className="Button"
       ref={chartArea}
+      onClick={() => props.switchSetHandler(props.data.name)}
     ></div>
   );
 };

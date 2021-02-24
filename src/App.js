@@ -16,10 +16,13 @@ class App extends Component {
   state = {
     data: [dataJson],
     activeName: null,
-    typeData: "qualityScore",
+    typeData: "Quality Score",
   };
 
-  typeSelected = (typeData) => this.setState({ typeData });
+  typeSelected = (typeData) => {
+    console.log("typeData", typeData);
+    return this.setState({ typeData });
+  };
 
   // componentWillMount() {
   //   json("https://udemy-react-d3.firebaseio.com/children.json")
@@ -66,7 +69,7 @@ class App extends Component {
         <Container>
           <Row>
             <Col xs={12}>
-              <TypeDropdown typeSelected={this.typeSelected} />
+              {/* <TypeDropdown typeSelected={this.typeSelected} /> */}
             </Col>
           </Row>
           <Row
@@ -82,6 +85,7 @@ class App extends Component {
                       data={el}
                       updateName={this.updateName}
                       type={this.state.typeData}
+                      switchSetHandler={this.typeSelected}
                     />
                   );
                 })
