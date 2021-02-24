@@ -6,9 +6,11 @@ import Col from "react-bootstrap/Col";
 import { json } from "d3";
 
 import ChartWrapper from "./ChartWrapper";
+import PieWrapper from "./PieWrapper";
 import Table from "./Table";
 import dataJson from "./data.json";
 import TypeDropdown from "./TypeDropdown";
+import D3Pie from "./D3Pie";
 
 class App extends Component {
   state = {
@@ -42,6 +44,19 @@ class App extends Component {
     );
   }
 
+  // renderPie() {
+  //   if (this.state.data.length === 0) {
+  //     return "No data yet";
+  //   }
+  //   return (
+  //     <PieWrapper
+  //       data={this.state.data}
+  //       updateName={this.updateName}
+  //       type={this.state.typeData}
+  //     />
+  //   );
+  // }
+
   render() {
     return (
       <div>
@@ -54,16 +69,37 @@ class App extends Component {
               <TypeDropdown typeSelected={this.typeSelected} />
             </Col>
           </Row>
-          <Row>
+          <Row
+            style={{
+              marginTop: "2rem",
+            }}
+          >
             <Col md={6} xs={12}>
-              {this.renderChart()}
+              {
+                this.state.data[0]["gaugeData"].map((el) => {
+                  return (
+                    <PieWrapper
+                      data={el}
+                      updateName={this.updateName}
+                      type={this.state.typeData}
+                    />
+                  );
+                })
+                //   <PieWrapper
+                //   data={this.state.data[0]["gaugeData"][0]}
+                //   updateName={this.updateName}
+                //   type={this.state.typeData}
+                // />
+              }
             </Col>
-            <Col md={6} xs={12}>
-              <Table
-                data={this.state.data}
-                updateData={this.updateData}
-                activeName={this.state.activeName}
-              />
+            <Col
+              md={6}
+              xs={12}
+              style={{
+                paddingTop: "4.5rem",
+              }}
+            >
+              {this.renderChart()}
             </Col>
           </Row>
         </Container>
